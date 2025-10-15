@@ -12,7 +12,7 @@ indices  = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16]
 base_dir = r"C:\Li\Projects\tum_courses\mri_lab_p1\data\Group 2 Gadulinium T1\1.2.826.0.1.3680043.8.1276.259246159.268.1000"
 
 ORDER_LABELS = [2, 5, 7, 6, 4, 1, 3]
-ORDER_NAMES  = ["C1", "C2", "C3", "C4", "C5", "C6", "C7"]
+ORDER_NAMES  = ["ROI1 (green)", "ROI2 (orange)", "ROI3 (cyan)", "ROI4 (purple)", "ROI5 (blue)", "ROI6 (red)", "ROI7 (gold)"]
 ORDER_COLORS = ["green", "orange", "cyan", "purple", "blue", "red", "gold"]
 
 DO_PIXEL_FIT_MASKED   = True
@@ -96,6 +96,13 @@ for i in indices:
     ds = pydicom.dcmread(os.path.join(ddir, "0001.dcm"))
     TI_list.append(ds.get("InversionTime", np.nan))
     arr = ds.pixel_array.astype(np.float32)
+
+    plt.figure()
+    plt.imshow(arr, cmap="gray")
+    plt.axis("off")
+    plt.savefig("./fig/{}.png".format(i))
+    plt.show()
+
     imgs.append(arr)
     if sum_image is None: sum_image = np.zeros_like(arr, dtype=np.float32)
     sum_image += arr
@@ -119,9 +126,25 @@ for lab in range(1, labels.max() + 1):
 
 palette_use = PALETTE[:max(1, min(labels_eroded.max() + 1, len(PALETTE)))]
 color_img   = palette_use[labels_eroded]
-plt.figure(figsize=(4, 4)); plt.imshow(sum_image, cmap="gray"); plt.axis("off"); plt.show()
-plt.figure(figsize=(4, 4)); plt.imshow(color_img); plt.axis("off"); plt.show()
-plt.figure(figsize=(4, 4)); plt.imshow(sum_image, cmap="gray"); plt.imshow(color_img, alpha=0.4); plt.axis("off"); plt.show()
+
+plt.figure(figsize=(4, 4))
+plt.imshow(sum_image, cmap="gray")
+plt.axis("off")
+plt.savefig("./fig/sum.png")
+plt.show()
+
+plt.figure(figsize=(4, 4))
+plt.imshow(color_img)
+plt.axis("off")
+plt.savefig("./fig/label.png")
+plt.show()
+
+plt.figure(figsize=(4, 4))
+plt.imshow(sum_image, cmap="gray")
+plt.imshow(color_img, alpha=0.4)
+plt.axis("off")
+plt.savefig("./fig/sum_label.png")
+plt.show()
 
 
 # Fit
@@ -141,15 +164,17 @@ plt.ylabel("Avg. Intensity in ROI")
 plt.legend(loc='lower right')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
+plt.savefig("./fig/int_vs_TI.png")
 plt.show()
 
 plt.figure(figsize=(9, 5))
-plt.plot(TI, means[:, 5], marker='o', linestyle='None', label="C6", color="Red")
+plt.plot(TI, means[:, 5], marker='o', linestyle='None', label="ROI6 (red)", color="Red")
 plt.xlabel("Inversion Time [ms]")
 plt.ylabel("Avg. Intensity in ROI")
 plt.legend(loc='lower right')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
+plt.savefig("./fig/int_vs_TI_example.png")
 plt.show()
 
 fit_results = []
@@ -166,7 +191,10 @@ for j, (name, color) in enumerate(zip(ORDER_NAMES, ORDER_COLORS)):
                  label=f"{name} fit (T1≈{T1:.0f} ms)")
 
 plt.xlabel("Inversion Time [ms]"); plt.ylabel("Avg. Intensity in ROI")
-plt.grid(True, alpha=0.3); plt.legend(ncol=2, fontsize=9); plt.tight_layout(); plt.show()
+plt.grid(True, alpha=0.3); plt.legend(ncol=2, fontsize=9)
+plt.tight_layout()
+plt.savefig("./fig/roi_fits.png")
+plt.show()
 
 print("{:>6}  {:>8}  {:>10}  {:>10}  {:>6}".format("ROI", "T1(ms)", "A", "B", "R^2"))
 for name, A, B, T1, R2 in sorted(fit_results, key=lambda x: (np.inf if not np.isfinite(x[3]) else x[3])):
@@ -201,7 +229,10 @@ if DO_PIXEL_FIT_MASKED:
     plt.imshow(T1_map, cmap='turbo', vmin=vmin, vmax=vmax)
     plt.colorbar(label='T1 [ms]')
     # plt.title('Per-pixel T1 Map (Foreground Mask)')
-    plt.axis('off'); plt.tight_layout(); plt.show()
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig("./fig/t1_map1.png")
+    plt.show()
 
 # Pixel-by-pixel T1 (all pixels)
 if DO_PIXEL_FIT_ALLPIXEL:
@@ -224,4 +255,7 @@ if DO_PIXEL_FIT_ALLPIXEL:
     plt.imshow(T1_vis, cmap='turbo', vmin=vmin, vmax=vmax)
     plt.colorbar(label='T1 [ms]')
     # plt.title('Per-pixel T1 Map (ALL pixels, no mask)')
-    plt.axis('off'); plt.tight_layout(); plt.show()
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig("./fig/t1_map2.png")
+    plt.show()
