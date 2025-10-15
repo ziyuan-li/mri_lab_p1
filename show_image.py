@@ -29,7 +29,7 @@ for file_name in dicom_files:
     print("Slice Thickness [mm]:", g("SliceThickness"))
     print("Pixel Spacing [mm]:", g("PixelSpacing"))
     print("Image Size (Rows x Cols):", ds.Rows, "x", ds.Columns)
-    print("-------------------------------")
+    print("\n\n")
 
     plt.imshow(ds.pixel_array, cmap="gray")
     plt.axis("off")

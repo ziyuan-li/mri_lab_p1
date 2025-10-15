@@ -1,8 +1,4 @@
-# reconstruct_water_phantom.py
-# MR Lab Part 1 - Section 3.4: manual reconstruction from raw FID
-
 import os
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 

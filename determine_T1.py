@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -228,7 +227,6 @@ if DO_PIXEL_FIT_MASKED:
     plt.figure(figsize=(6, 5))
     plt.imshow(T1_map, cmap='turbo', vmin=vmin, vmax=vmax)
     plt.colorbar(label='T1 [ms]')
-    # plt.title('Per-pixel T1 Map (Foreground Mask)')
     plt.axis('off')
     plt.tight_layout()
     plt.savefig("./fig/t1_map1.png")
@@ -254,7 +252,6 @@ if DO_PIXEL_FIT_ALLPIXEL:
     plt.figure(figsize=(6,5))
     plt.imshow(T1_vis, cmap='turbo', vmin=vmin, vmax=vmax)
     plt.colorbar(label='T1 [ms]')
-    # plt.title('Per-pixel T1 Map (ALL pixels, no mask)')
     plt.axis('off')
     plt.tight_layout()
     plt.savefig("./fig/t1_map2.png")
