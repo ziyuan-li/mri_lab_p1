@@ -195,14 +195,9 @@ plt.tight_layout()
 plt.savefig("./fig/roi_fits.png")
 plt.show()
 
-print("{:>6}  {:>8}  {:>10}  {:>10}  {:>6}".format("ROI", "T1(ms)", "A", "B", "R^2"))
+print("{:^15}  {:^10}  {:^10}  {:^10}  {:^10}".format("ROI", "T1(ms)", "A", "B", "R^2"))
 for name, A, B, T1, R2 in sorted(fit_results, key=lambda x: (np.inf if not np.isfinite(x[3]) else x[3])):
-    print("{:>6}  {:>8}  {:>10.2f}  {:>10.2f}  {:>6.2f}".format(
-        name, f"{T1:.2f}" if np.isfinite(T1) else "nan",
-        A if np.isfinite(A) else np.nan,
-        B if np.isfinite(B) else np.nan,
-        R2 if np.isfinite(R2) else np.nan
-    ))
+    print("{:^15}  {:^10}  {:^10}  {:^10}  {:^10}".format(name, f"{T1:.2f}", f"{A:.2f}", f"{B:.2f}", f"{R2:.2f}"))
 
 # Pixel-by-pixel T1 (foreground mask region)
 if DO_PIXEL_FIT_MASKED:
